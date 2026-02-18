@@ -44,188 +44,92 @@
 
 ## 4.โค้ดการทํางาน 
 
+```cpp
 #include <Arduino.h> 
-*#include <ESP32Servo.h> 
-*#include <Ultrasonic.h> 
+#include <ESP32Servo.h> 
+#include <Ultrasonic.h> 
 
-int SERVO = 27; 
-int TRIG = 19; 
-int ECHO = 18; 
-int DISTX = 20; 
-int BUZZER = 17; 
+// --- การกำหนดขา Pin ---
+int SERVO   = 27; 
+int TRIG    = 19; 
+int ECHO    = 18; 
+int DISTX   = 20; // ระยะทางที่กำหนด (เซนติเมตร)
+int BUZZER  = 17; 
 
+// --- การตั้งค่า Library ---
 Servo srvo; 
 Ultrasonic ultrasonic(TRIG, ECHO, 40000UL); 
+
 bool triggered = false; 
+
+/**
+ * ฟังก์ชันสำหรับเล่นเพลง Tetris (Theme A)
+ */
 void song(int buzzerPin) { 
-tone(buzzerPin, 330); 
-delay(667); 
-noTone(buzzerPin); 
-tone(buzzerPin, 247); 
-delay(333); 
-noTone(buzzerPin); 
-tone(buzzerPin, 262); 
-delay(333); 
-noTone(buzzerPin); 
-tone(buzzerPin, 294); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 247); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
+  tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 247); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 294); delay(667); noTone(buzzerPin); 
+  
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 247); delay(333); noTone(buzzerPin); 
   delay(1); 
- 
-  tone(buzzerPin, 220); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 220); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
+  
+  tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 220); delay(333); noTone(buzzerPin); 
   delay(1); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 330); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 294); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 247); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 247); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
+  
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 294); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  
+  tone(buzzerPin, 247); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 247); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
   delay(1); 
- 
-  tone(buzzerPin, 294); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 330); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 220); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 220); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  delay(1000); 
- 
-  tone(buzzerPin, 294); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 349); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 440); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 392); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 349); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 330); 
-  delay(1000); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
+  
+  tone(buzzerPin, 294); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
+  
+  delay(1000); // พักช่วงเพลง
+  
+  tone(buzzerPin, 294); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 349); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 440); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 392); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 349); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 330); delay(1000); noTone(buzzerPin); 
+  
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
   delay(1); 
- 
-  tone(buzzerPin, 330); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 294); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
+  
+  tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 294); delay(333); noTone(buzzerPin); 
   delay(1); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 247); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 247); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(333); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 294); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 330); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 262); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 220); 
-  delay(667); 
-  noTone(buzzerPin); 
- 
-  tone(buzzerPin, 220); 
-  delay(667); 
-  noTone(buzzerPin); 
+  
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 247); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 247); delay(333); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(333); noTone(buzzerPin); 
+  
+  tone(buzzerPin, 294); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 262); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
+  tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
 } 
- 
+
 void setup() { 
     Serial.begin(115200); 
     Serial.println("TETRIS 1!"); 
-     
-    srvo.write(0); 
- 
+    
+    srvo.write(0); // เซ็ตตำแหน่งเริ่มต้น Servo
+
+    // เล่นเพลง 3 รอบตอนเริ่มต้น
     song(BUZZER); 
     delay(500); 
     Serial.println("TETRIS 2!"); 
@@ -233,45 +137,54 @@ void setup() {
     delay(500); 
     Serial.println("TETRIS 3!"); 
     song(BUZZER); 
- 
+
     srvo.attach(SERVO); 
     srvo.write(0); 
     Serial.println("READY!"); 
 } 
- 
- 
+
 void loop() { 
- 
     unsigned int dist = ultrasonic.read(CM); 
- 
-    if (dist == 0) return; 
- 
+
+    if (dist == 0) return; // ป้องกันค่า Error จาก Sensor
+
     Serial.println(dist); 
- 
+
+    // เงื่อนไข: ถ้าวัตถุอยู่ใกล้กว่าหรือเท่ากับระยะ DISTX
     if (dist <= DISTX && !triggered) { 
- 
         triggered = true; 
- 
-        srvo.write(90); 
-        delay(5000);  
- 
-        srvo.write(0); 
- 
+
+        srvo.write(90);    // หมุนไปที่ 90 องศา
+        delay(5000);       // รอ 5 วินาที
+
+        srvo.write(0);     // หมุนกลับไปที่ 0 องศา
         delay(1000); 
-        srvo.detach(); 
- 
-        ESP.restart(); 
+        
+        srvo.detach();     // ตัดการเชื่อมต่อ Servo เพื่อถนอมมอเตอร์
+        ESP.restart();     // รีสตาร์ทบอร์ด (เริ่มเล่นเพลงใหม่)
         return; 
     } 
- 
-    // Reset trigger when object leaves 
+
+    // รีเซ็ตสถานะเมื่อวัตถุออกห่าง
     if (dist > DISTX) { 
         triggered = false; 
     } 
- 
+
     delay(200); 
 }
 
+```
+
+---
+
+## 🛠️ รายละเอียดการทำงาน
+
+1. **Startup:** เมื่อจ่ายไฟ บอร์ดจะเล่นเพลง Tetris ทั้งหมด 3 รอบผ่าน Buzzer (GPIO 17)
+2. **Monitoring:** ใช้ Sensor HC-SR04 วัดระยะทางแบบ Real-time
+3. **Action:** หากมีคนเอามือมาจ่อใกล้กว่า **20 cm** Servo จะเปิดไปที่ 90 องศา ค้างไว้ 5 วินาทีแล้วปิดลง
+4. **Auto-Reset:** หลังจากทำงานเสร็จ บอร์ดจะทำการ `ESP.restart()` เพื่อเริ่มนับหนึ่งใหม่ทั้งหมด
+
+---
 
 ## 5. ภาพชิ้นงานจริงและแผงวงจร
 ![](./1000015259.jpeg)
