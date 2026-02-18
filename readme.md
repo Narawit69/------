@@ -43,14 +43,17 @@
 4. **Reset:** มอเตอร์หมุนกลับที่เดิมและหน่วงเวลา (Delay) เพื่อป้องกันการพ่นซ้ำซ้อน ก่อนจะกลับไปเริ่มทำงานใหม่ 
 
 ## 4.โค้ดการทํางาน 
+
 #include <Arduino.h> 
 #include <ESP32Servo.h> 
 #include <Ultrasonic.h> 
+
 int SERVO = 27; 
 int TRIG = 19; 
 int ECHO = 18; 
 int DISTX = 20; 
 int BUZZER = 17; 
+
 Servo srvo; 
 Ultrasonic ultrasonic(TRIG, ECHO, 40000UL); 
 bool triggered = false; 
