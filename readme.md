@@ -49,21 +49,21 @@
 #include <ESP32Servo.h> 
 #include <Ultrasonic.h> 
 
-// --- การกำหนดขา Pin ---
+// การกำหนดขา Pin
 int SERVO   = 27; 
 int TRIG    = 19; 
 int ECHO    = 18; 
 int DISTX   = 20; // ระยะทางที่กำหนด (เซนติเมตร)
 int BUZZER  = 17; 
 
-// --- การตั้งค่า Library ---
+// การตั้งค่า Library 
 Servo srvo; 
 Ultrasonic ultrasonic(TRIG, ECHO, 40000UL); 
 
 bool triggered = false; 
 
 /**
- * ฟังก์ชันสำหรับเล่นเพลง Tetris (Theme A)
+ * ฟังก์ชันสำหรับเล่นเพลง
  */
 void song(int buzzerPin) { 
   tone(buzzerPin, 330); delay(667); noTone(buzzerPin); 
@@ -121,6 +121,7 @@ void song(int buzzerPin) {
   tone(buzzerPin, 262); delay(667); noTone(buzzerPin); 
   tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
   tone(buzzerPin, 220); delay(667); noTone(buzzerPin); 
+  // เพลงสุดเร้าใจระดับลำโพงแตก
 } 
 
 void setup() { 
