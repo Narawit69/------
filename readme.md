@@ -40,13 +40,237 @@
 
 * น้ำหอมพ่นออกมา 
 
-
-
-
 4. **Reset:** มอเตอร์หมุนกลับที่เดิมและหน่วงเวลา (Delay) เพื่อป้องกันการพ่นซ้ำซ้อน ก่อนจะกลับไปเริ่มทำงานใหม่ 
 
+## 4.โค้ดการทํางาน 
+#include <Arduino.h> 
+#include <ESP32Servo.h> 
+#include <Ultrasonic.h> 
+int SERVO = 27; 
+int TRIG = 19; 
+int ECHO = 18; 
+int DISTX = 20; 
+int BUZZER = 17; 
+Servo srvo; 
+Ultrasonic ultrasonic(TRIG, ECHO, 40000UL); 
+bool triggered = false; 
+void song(int buzzerPin) { 
+tone(buzzerPin, 330); 
+delay(667); 
+noTone(buzzerPin); 
+tone(buzzerPin, 247); 
+delay(333); 
+noTone(buzzerPin); 
+tone(buzzerPin, 262); 
+delay(333); 
+noTone(buzzerPin); 
+tone(buzzerPin, 294); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 247); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  delay(1); 
+ 
+  tone(buzzerPin, 220); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 220); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  delay(1); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 330); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 294); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 247); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 247); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  delay(1); 
+ 
+  tone(buzzerPin, 294); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 330); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 220); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 220); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  delay(1000); 
+ 
+  tone(buzzerPin, 294); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 349); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 440); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 392); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 349); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 330); 
+  delay(1000); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  delay(1); 
+ 
+  tone(buzzerPin, 330); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 294); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  delay(1); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 247); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 247); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(333); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 294); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 330); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 262); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 220); 
+  delay(667); 
+  noTone(buzzerPin); 
+ 
+  tone(buzzerPin, 220); 
+  delay(667); 
+  noTone(buzzerPin); 
+} 
+ 
+void setup() { 
+    Serial.begin(115200); 
+    Serial.println("TETRIS 1!"); 
+     
+    srvo.write(0); 
+ 
+    song(BUZZER); 
+    delay(500); 
+    Serial.println("TETRIS 2!"); 
+    song(BUZZER); 
+    delay(500); 
+    Serial.println("TETRIS 3!"); 
+    song(BUZZER); 
+ 
+    srvo.attach(SERVO); 
+    srvo.write(0); 
+    Serial.println("READY!"); 
+} 
+ 
+ 
+void loop() { 
+ 
+    unsigned int dist = ultrasonic.read(CM); 
+ 
+    if (dist == 0) return; 
+ 
+    Serial.println(dist); 
+ 
+    if (dist <= DISTX && !triggered) { 
+ 
+        triggered = true; 
+ 
+        srvo.write(90); 
+        delay(5000);  
+ 
+        srvo.write(0); 
+ 
+        delay(1000); 
+        srvo.detach(); 
+ 
+        ESP.restart(); 
+        return; 
+    } 
+ 
+    // Reset trigger when object leaves 
+    if (dist > DISTX) { 
+        triggered = false; 
+    } 
+ 
+    delay(200); 
+}
 
-## 4. ภาพชิ้นงานจริงและแผงวงจร
+
+## 5. ภาพชิ้นงานจริงและแผงวงจร
 ![](./1000015259.jpeg)
 
 ### ชิ้นงานจริง (Physical Prototype)
@@ -62,7 +286,7 @@
 
 ---
 
-## 5. การตรวจสอบและทดสอบระบบ
+## 6. การตรวจสอบและทดสอบระบบ
 
 จากการทดสอบพบว่าระบบทำงานได้ตามเงื่อนไขที่วางไว้: 
 
@@ -75,7 +299,7 @@
 
 
 
-## 6. สมาชิกกลุ่ม
+## 7. สมาชิกกลุ่ม
 
 **นาย นราวิชญ์ โกสีนาม:** หัวหน้ากลุ่ม 
 
